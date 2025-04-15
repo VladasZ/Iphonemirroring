@@ -1,22 +1,35 @@
+#!/usr/bin/env python3
+
 import os
 import subprocess
 import shutil
 
+# get current username
+def get_username():
+    try:
+        return os.getlogin()
+    except Exception:
+        return os.environ.get("USER")
+
+username = get_username()
+
+
+print(f"Setting for user {username}")
+
 # file paths
 system_file = "/private/var/db/os_eligibility/eligibility.plist"
-replacement_file = "/Users/YOUR_USERNAME/Downloads/hazemirror/eligibility.plist"  # change "YOUR_USERNAME" to your user,if u don't know your user type whoami command and take the user from there
+replacement_file = f"/Users/{username}/Downloads/hazemirror/eligibility.plist"
 
 
 # file change function
 def replace_files():
     try:
-        # backup create 
+        # backup create
         backup_file = f"{system_file}.backup"
         if not os.path.exists(backup_file):
             shutil.copy(system_file, backup_file)
 
-        
-        print("Root permisson required")
+        print("Root permission required")
         subprocess.run(['sudo', 'cp', replacement_file, system_file], check=True)
         print("File changed successfully.")
 
@@ -31,9 +44,9 @@ def launch_mirroring_app():
         print("Application starting iPhone Mirroring...")
         subprocess.run(['open', '/System/Applications/iPhone Mirroring.app'], check=True)
         print("Access granted.")
-	
+
     except Exception as e:
-        print(f"Update os to macos sequoia,the error: {e}")
+        print(f"Update macOS to Sequoia. The error: {e}")
 
 
 if __name__ == "__main__":
